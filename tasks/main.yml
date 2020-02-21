@@ -17,5 +17,23 @@
     force: true
     accept_hostkey: true
 
+- name: CHECK IF AWX HAS BEEN INSTALLED BEFORE
+  stat:
+    path: /etc/awx_playbook_complete
+  register: awx_installed
+
+- name: SET AWX DOCKER COMPOSE PATH
+  lineinfile:
+    path: "{{ awx_repo_dir }}/installer/inventory"
+    state: "present"
+    regexp: "^docker_compose_dir="
+    line: "docker_compose_dir={{ awx_compose_dir }}"
+
+- include: awx-https.yml
+  when: awx_run_install_playbook
+
+- include: set-awx-passwords.yml
+  when: awx_run_install_playbook
+
 - include: awx-install-playbook.yml
   when: awx_run_install_playbook
