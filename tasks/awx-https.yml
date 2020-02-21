@@ -1,0 +1,37 @@
+---
+- name: MAKE CSR FOLDER
+  file:
+    path: /etc/ssl/csr
+    state: directory
+
+- name: MAKE PRIVATE KEY FOLDER
+  file:
+    path: /etc/ssl/private
+    state: directory
+
+- name: MAKE CERT PRIVATEKEY
+  openssl_privatekey:
+    path: "/etc/ssl/private/{{ inventory_hostname }}.key"
+
+- name: MAKE CERT CSR
+  openssl_csr:
+    path: "/etc/ssl/csr/{{ inventory_hostname }}.csr"
+    privatekey_path: "/etc/ssl/private/{{ inventory_hostname }}.key"
+    common_name: "{{ inventory_hostname }}"
+
+- name: MAKE SELF SIGNED CERT
+  openssl_certificate:
+    path: "/etc/ssl/certs/{{ inventory_hostname }}.crt"
+    privatekey_path: "/etc/ssl/private/{{ inventory_hostname }}.key"
+    csr_path: "/etc/ssl/csr/{{ inventory_hostname }}.csr"
+    selfsigned_not_after: "+3650d"
+    provider: selfsigned
+
+- name: MAKE PEM CERT
+  shell: cat /etc/ssl/private/{{ inventory_hostname }}.key /etc/ssl/certs/{{ inventory_hostname }}.crt > /etc/ssl/certs/{{ inventory_hostname }}.pem
+
+- name: CHANGE AWX INVENTORY FILE
+  lineinfile:
+    path: "{{ awx_repo_dir }}/installer/inventory"
+    line: "ssl_certificate=/etc/ssl/certs/{{ inventory_hostname }}.pem"
+    state: present
