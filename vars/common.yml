@@ -1,0 +1,7 @@
+passwords:
+  - regexp: '^admin_password='
+    line: "admin_password='{{ awx_admin_password }}'"
+  - regexp: '^pg_password='
+    line: "pg_password='{{ awx_pg_password }}'"
+  - regexp: '^rabbitmq_password='
+    line: "rabbitmq_password='{{ awx_rabbitmq_password }}'"

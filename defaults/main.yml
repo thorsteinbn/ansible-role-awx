@@ -1,9 +1,13 @@
 ---
 awx_repo: https://github.com/ansible/awx.git
 awx_repo_dir: "~/awx"
-awx_version: devel
+awx_version: 11.2.0
 awx_keep_updated: true
 awx_run_install_playbook: true
 awx_dockerhub_base: ansible
 postgres_data_dir: /var/lib/pgdocker
 awx_compose_dir: /opt/awx
+
+awx_admin_password: 'admin'
+awx_pg_password: 'cGxlYXNlY2hhbmdlbWU='
+awx_rabbitmq_password: 'Y2hhbmdlbWVub3ch'
